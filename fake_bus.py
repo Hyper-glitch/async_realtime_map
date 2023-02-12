@@ -26,4 +26,5 @@ async def fake_bus_client():
 
 
 if __name__ == '__main__':
-    trio.run(async_fn=fake_bus_client)
+    while True:
+        trio.run(async_fn=fake_bus_client)
