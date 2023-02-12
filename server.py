@@ -29,7 +29,6 @@ async def send_to_browser(request):
         server_msg_dto = ServerMessageDTO(msgType="Buses", buses=BUSES)
         try:
             await ws.send_message(server_msg_dto.json())
-            BUSES.clear()
             await trio.sleep(1)
         except (ConnectionClosed, BaseException):
             break
