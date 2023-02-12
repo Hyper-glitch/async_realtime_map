@@ -1,13 +1,10 @@
 import json
-
-import aiofiles
-
-from dto import RouteDTO
+import os
 
 
-async def read_route_file():
-    async with aiofiles.open('routes/156.json', mode='r') as file:
-        content = await file.read()
-    route = json.loads(content)
-    route_dto = RouteDTO(**route)
-    return route_dto
+def load_routes(directory_path='routes'):
+    for filename in os.listdir(directory_path)[:200]:
+        if filename.endswith(".json"):
+            filepath = os.path.join(directory_path, filename)
+            with open(filepath, 'r', encoding='utf8') as file:
+                yield json.load(file)
