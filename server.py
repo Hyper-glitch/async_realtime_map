@@ -2,7 +2,7 @@ import trio
 from pydantic.error_wrappers import ValidationError
 from trio_websocket import ConnectionClosed
 
-from dto import ClientMessageDTO, BusDTO, ServerMessageDTO
+from dto import BusDTO, ServerMessageDTO
 
 BUSES: list[BusDTO] = []
 
@@ -10,17 +10,15 @@ BUSES: list[BusDTO] = []
 async def server(request):
     ws = await request.accept()
     while True:
-        dto = None
-        message = await ws.get_message()
         try:
+            message = await ws.get_message()
             dto = BusDTO.parse_raw(message)
             BUSES.append(dto)
+            print(dto)
         except ValidationError:
-            dto = ClientMessageDTO.parse_raw(message)
+            continue
         except (ConnectionClosed, BaseException):
             break
-        finally:
-            print(dto)
 
 
 async def send_to_browser(request):
